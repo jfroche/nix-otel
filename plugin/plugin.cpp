@@ -7,8 +7,8 @@
 #include <iterator>
 #include <optional>
 #include <primops.hh>
+#include <command.hh>
 #include <string_view>
-
 #if HAVE_BOEHMGC
 
 #include <gc/gc.h>
@@ -167,6 +167,15 @@ class PluginInstance {
 public:
   PluginInstance() {
     Logger *oldLogger = logger;
+
+    std::string command;
+    char** p;
+    for (p = nix::savedArgv; *p != nullptr; p++) {
+      command += *p;
+      command += " ";
+    }
+    std::cout << command << "\n";
+
     context = initialize_plugin();
     logger = new OTelLogger(oldLogger, context);
   }
